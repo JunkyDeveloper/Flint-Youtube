@@ -1,0 +1,62 @@
+{
+    "$schema": "https://raw.githubusercontent.com/FlintTestMC/flint-core/refs/heads/main/flint-content/test_spec_schema.json", 
+    "flintVersion": "1.0", 
+    "name": "fence-custom-v2", 
+    "description": "Test custom fence behaviour", 
+    "tags": ["connectible", "fence", "wood-types", "block-state", "neighbor-update"], 
+    "minecraftIds": ["minecraft:oak_fence"], 
+    "dependencies": [], 
+    "setup": {
+        "cleanup": {
+            "region": [ [0, 0, 0], [0, 0, 0] ]
+        },
+        "player": {
+            "inventory": {
+                "hotbar2": {
+                    "id": "minecraft:stone",
+                    "count": 1
+                }
+            }
+        }
+    },
+    "timeline": [
+        { "at": 0, "do": "place", "pos": [0, 0, 0], "block": {"id": "minecraft:oak_fence"} },
+        {"at":0, "do": "select_hotbar", "slot": 2},
+        {
+            "at": [1,4], 
+            "do": "assert", 
+            "checks": [
+                {
+                    "pos": [0, 0, 0], 
+                    "is": {
+                        "id"         : "minecraft:oak_fence", 
+                        "north"      : "false"              , 
+                        "east"       : "false"              , 
+                        "waterlogged": "false"              , 
+                        "west"       : "false"              , 
+                        "south"      : "false"                
+                    }
+                }
+            ]
+        },
+        {"at":[1,3], "do": "use_item_on", "face": "top", "pos": [0,0,0]},
+        {
+            "at": 2, 
+            "do": "assert", 
+            "checks": [
+                {
+                    "pos": [0, 0, 0], 
+                    "is": {
+                        "id"         : "minecraft:oak_fence", 
+                        "north"      : "true"               , 
+                        "east"       : "true"               , 
+                        "waterlogged": "false"              , 
+                        "west"       : "true"               , 
+                        "south"      : "true"                 
+                    }
+                }
+            ]
+        },
+        {"at":2, "do": "set_slot", "slot": "hotbar2", "count": 1,"item": "empty"}
+    ]
+}
