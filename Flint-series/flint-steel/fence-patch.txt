@@ -1,0 +1,45 @@
+    fn use_item_on(
+        &self,
+        _item_stack: &ItemStack,
+        state: BlockStateId,
+        world: &World,
+        pos: BlockPos,
+        _player: &Player,
+        _hand: InteractionHand,
+        _hit_result: &BlockHitResult,
+    ) -> InteractionResult {
+        if _item_stack.is_empty() {
+            return InteractionResult::TryEmptyHandInteraction;
+        }
+        tracing::warn!("FenceBlock::use_item_on called for {:?}", self.block.key);
+        world.set_block(
+            pos,
+            state
+                .set_value(&Self::NORTH, true)
+                .set_value(&Self::EAST, true)
+                .set_value(&Self::SOUTH, true)
+                .set_value(&Self::WEST, true),
+            UpdateFlags::UPDATE_NEIGHBORS,
+        );
+        InteractionResult::Success
+    }
+    fn use_without_item(
+        &self,
+        state: BlockStateId,
+        world: &World,
+        pos: BlockPos,
+        _player: &Player,
+        _hit_result: &BlockHitResult,
+    ) -> InteractionResult {
+        tracing::warn!("FenceBlock::use_without_item_on called for {:?}", self.block.key);
+        world.set_block(
+            pos,
+            state
+                .set_value(&Self::NORTH, false)
+                .set_value(&Self::EAST, false)
+                .set_value(&Self::SOUTH, false)
+                .set_value(&Self::WEST, false),
+            UpdateFlags::UPDATE_NEIGHBORS,
+        );
+        InteractionResult::Success
+    }
